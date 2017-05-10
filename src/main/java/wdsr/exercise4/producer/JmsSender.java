@@ -12,10 +12,10 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JmsQueueProducer{
-	private static final Logger log = LoggerFactory.getLogger(JmsQueueProducer.class);
+public class JmsSender{
+	private static final Logger log = LoggerFactory.getLogger(JmsSender.class);
 
-	private final String queueName;
+	private final String topicName;
 	private static final String HOST_URL = "tcp://localhost:61616";
 	MessageProducer messageProducer;
 	ConnectionFactory connectionFactory;
@@ -24,8 +24,8 @@ public class JmsQueueProducer{
 	Destination destination;
 	
 
-	public JmsQueueProducer(final String _queue) {
-		this.queueName = _queue;
+	public JmsSender(final String _topic) {
+		this.topicName = _topic;
 		connectionFactory = new ActiveMQConnectionFactory(HOST_URL);
 	}
 
@@ -46,12 +46,12 @@ public class JmsQueueProducer{
 		try {
 
 			connect();
-			destination = session.createQueue(queueName);
+			destination = session.createQueue(topicName);
 			messageProducer = session.createProducer(destination);
 			connection.start();
-			TextMessage message = session.createTextMessage(text);
+			TextMessage textMessage = session.createTextMessage(text);
 			messageProducer.setDeliveryMode(deliveryMode);
-			messageProducer.send(message);
+			messageProducer.send(textMessage);
 			close();
 
 		} catch (JMSException e) {

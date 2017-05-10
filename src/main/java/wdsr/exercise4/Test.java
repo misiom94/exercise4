@@ -1,9 +1,8 @@
 package wdsr.exercise4;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import wdsr.exercise4.producer.JmsQueueProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import wdsr.exercise4.producer.JmsSender;
 
 public class Test {
 	
@@ -12,7 +11,7 @@ public class Test {
 	static final int MESSAGES_COUNT = 10000;
 	static final String QUEUE_NAME = "misiom94.QUEUE";
 
-	private static final Logger log = LogManager.getLogger(Test.class);
+	private static final Logger log = LoggerFactory.getLogger(Test.class);
 	
 	public static void main(String[] args) {
 		
@@ -25,12 +24,12 @@ public class Test {
 	}
 	
 	private static long sendMessages(int persistentMode){
-		JmsQueueProducer jqp = new JmsQueueProducer(QUEUE_NAME);
+		JmsSender jmsSender = new JmsSender(QUEUE_NAME);
 		long start, stop, time;
 		final String text = "test_";
 		start = System.currentTimeMillis();
 		for (int i = 0; i < MESSAGES_COUNT; i++) {
-			jqp.sendString(String.format(text + "%d", i), persistentMode);
+			jmsSender.sendString(String.format(text + "%d", i), persistentMode);
 		}
 		stop = System.currentTimeMillis();
 		time = stop - start;
